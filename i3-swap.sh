@@ -24,7 +24,6 @@ W1="$(_i3_get_workspace 0)"
 W2="$(_i3_get_workspace 1)"
 
 _i3_move_workspace "$W1"
-sleep 0.01
 _i3_move_workspace "$W2"
 
 exit 0
