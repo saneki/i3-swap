@@ -1,25 +1,27 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Script to swap which workspace is on which monitor (output)
 # Might not work as expected if at least one workspace is empty
 
-import i3ipc, time
+import i3, time
 
-conn = i3ipc.Connection()
-outputs = conn.get_outputs()
+outputs = i3.get_outputs()
+workspaces = i3.get_workspaces()
 
 # Only include outputs with active: True
-outputs = [o for o in outputs if o['active'] is True]
+workspaces = [o['current_workspace'] for o in outputs if o['active'] is True]
 
-if len(outputs) == 2:
-    conn.command('workspace ' + outputs[0]['current_workspace'])
-    conn.command('move workspace to output right')
+print('Out 1: {}, Out 2: {}'.format(workspaces[0], workspaces[1]))
+
+if len(workspaces) == 2:
+    i3.command('workspace', workspaces[0])
+    i3.command('move', 'workspace to output right')
 
     # Hacky fix for race condition
     time.sleep(0.01)
 
-    conn.command('workspace ' + outputs[1]['current_workspace'])
-    conn.command('move workspace to output left')
+    i3.command('workspace', workspaces[1])
+    i3.command('move', 'workspace to output left')
 elif len(outputs) < 2:
     print('Not enough outputs')
 else:
